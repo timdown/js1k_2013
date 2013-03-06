@@ -3,12 +3,12 @@ cols = 15;
 blobCount = rows * cols;
 blobSize = 40;
 
-c.width = w = blockSize * cols;
-c.height = h = blockSize * rows;
+c.width = w = blobSize * cols;
+c.height = h = blobSize * rows;
 
 blobs = [];
 i = blobCount;
-while (i--) blobs[i] = { c: ~~(Math.random() * 5), x: ~~(i / rows), y: i % rows };
+while (i--) blobs[i] = { c: ~~(Math.random() * 5) + 1, x: ~~(i / rows), y: i % rows };
 
 function drawItem(colour, isRect, x, y, width, height) {
     // Fill the background
@@ -17,7 +17,7 @@ function drawItem(colour, isRect, x, y, width, height) {
         if (isRect) {
             fillRect(x, y, width, height);
         } else {
-            (beginPath(), arc(x, y, w, 0, 0, 0), fill());
+            (beginPath(), arc(x, y, width, 0, 7, 0), fill());
         }
     }
 }
@@ -30,7 +30,7 @@ function draw() {
     i = blobCount;
     while (i--) {
         blob = blobs[i];
-        drawItem(blob.c, 0, blob.x, blob.y, blobSize / 2)
+        drawItem(blob.c, 0, (blob.x + .5) * blobSize, (blob.y + .5) * blobSize, blobSize / 2)
     }
 }
 

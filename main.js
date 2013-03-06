@@ -7,12 +7,14 @@ var fs = require("fs");
 http.createServer(function (req, res) {
     var templateHtml = fs.readFileSync("./client/template.html", "utf8");
     var uncrushedJs = fs.readFileSync("./client/main.js", "utf8");
-    var crushedJs = crush.crush(uncrushedJs);
-    var crushedJsByteCount = crush.byteCount(crushedJs);
 
-    var html = templateHtml.replace(/%%escaped_script%%/g, escapeHtml(crushedJs))
-        .replace(/%%script_size%%/, crushedJsByteCount)
-        .replace(/\/\*%%script%%\*\//, uncrushedJs);
+    var parsedUrl = require('url').parse(req.url);
+    var js = (parsedUrl.pathname == "/crush") ? crush.crush(uncrushedJs) : uncrushedJs
+    var jsByteCount = crush.byteCount(js);
+
+    var html = templateHtml.replace(/%%escaped_script%%/g, escapeHtml(js))
+        .replace(/%%script_size%%/, jsByteCount)
+        .replace(/\/\*%%script%%\*\//, js);
     
     res.writeHead(200, {'Content-Type': 'text/html'});
     res.end(html);
